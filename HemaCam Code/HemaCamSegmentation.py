@@ -31,17 +31,20 @@ global rootpath, imgnum
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
 imgnum = 2
 
-def img_load(num):
+def img_load(name):
 #    filepath = rootpath + "\Images\\new\s{}.jpg".format(num)
-    filepath = rootpath + "{}.jpg".format(num)
+    filepath = rootpath + name + ".jpg"
     img = cv2.imread(filepath)
-    img = cv2.pyrMeanShiftFiltering(img, 21, 25)
+    img = cv2.pyrMeanShiftFiltering(img, 0, 0)
+#    cv2.imshow("3", img)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return img, gray
 
 def thresh(img, gray):
     filepath = rootpath  
     blur = cv2.GaussianBlur(gray, (5,5),0)
+#    blur = cv2.bilateralFilter(gray,5,75,75)
+#    cv2.imshow("!", blur)
 #    f = filepath + "\Images/blur{}.png".format(imgnum)
 #    cv2.imwrite(f, blur)
     threshVal = 200 #127
@@ -51,25 +54,29 @@ def thresh(img, gray):
                                    +cv2.THRESH_OTSU)
 #    f2 = filepath + "\Images/thresh{}.png".format(imgnum)                                   
 #    cv2.imwrite(f2, threshold)
-    x,contours, hierarchy = cv2.findContours(threshold.copy(),
-                cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) 
-    cv2.drawContours(img, contours, -1, (255,0,0), cv2.FILLED)
-#    f3 = filepath + "\Images\contour{}.png".format(imgnum)                                   
-#    cv2.imwrite(f3, img)
-    new = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    new = cv2.bitwise_not(new)
-    ret2, new = cv2.threshold(new, threshVal, 255,
-                                   cv2.THRESH_BINARY
-                                   +cv2.THRESH_OTSU)                       
-#    f4 = filepath + "\Images/newthresh{}.png".format(imgnum)                                   
-#    cv2.imwrite(f4, new)  
-    thresh = new
-    return thresh
+#    x,contours, hierarchy = cv2.findContours(threshold.copy(),
+#                cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) 
+#    cv2.drawContours(img, contours, -1, (255,0,0), cv2.FILLED)
+##    f3 = filepath + "\Images\contour{}.png".format(imgnum)                                   
+##    cv2.imwrite(f3, img)
+#    new = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#    new = cv2.bitwise_not(new)
+#    ret2, new = cv2.threshold(new, threshVal, 255,
+#                                   cv2.THRESH_BINARY
+#                                   +cv2.THRESH_OTSU)                       
+##    f4 = filepath + "\Images/newthresh{}.png".format(imgnum)                                   
+##    cv2.imwrite(f4, new)  
+#    thresh = new
+#    cv2.imshow("p", thresh)
+#    cv2.waitKey(0)
+#    cv2.destroyAllWindows()
+    return threshold
 
 def extractFeatures(c):
     area = cv2.contourArea(c)
     perimeter = cv2.arcLength(c, True)
     compactness = (perimeter**2/area) - 1.0
+    circularity = (4*math.sqrt(area))/perimeter
     ellipse = cv2.fitEllipse(c)
 #    cv2.ellipse(out, ellipse, (0,255,0),2)
     x = int(ellipse[0][0])
@@ -77,12 +84,13 @@ def extractFeatures(c):
     center = (x,y)
     width = int(ellipse[1][0])
     height = int(ellipse[1][1])
-    r1 = width/2
-    r2 = height/2
+    r1 = width/2.0
+    r2 = height/2.0
+    ratio = r1/r2
 #    cv2.imshow("mask", new)    
 #    mean, stddev = cv2.meanStdDev(gray, new)
 #    print stddev
-    features = [r1, r2]
+    features = [perimeter, area, circularity, r1, r2, ratio]
     return features
 
 def manual_label(c, clean, target):

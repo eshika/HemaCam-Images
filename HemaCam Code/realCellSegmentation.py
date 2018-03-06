@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb 21 00:11:01 2018
+Created on Thu Aug 17 11:39:22 2017
 
 @author: eshikasaxena
 
-bounding rectangle
+0: normal
+1: sickle
+2: cluster
+"""
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb 20 22:29:41 2018
+
+@author: eshikasaxena
+
+labels with area
 """
 import numpy as np
 import cv2
@@ -12,6 +22,7 @@ from HemaCamSegmentation import img_load, thresh
 from scipy import ndimage
 from skimage.feature import peak_local_max
 from skimage.morphology import watershed
+from color import calcHist
 
 global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
@@ -19,7 +30,7 @@ imgname = "0057"
 
 
 
-def boundingEllipse(img, threshold, gray, filepath):
+def cellSegmentation(img, threshold, gray, filepath):
     contours = []
     clean = img.copy()
     D = ndimage.distance_transform_edt(threshold)
@@ -36,27 +47,18 @@ def boundingEllipse(img, threshold, gray, filepath):
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
         c = max(cnts, key=cv2.contourArea)
         if c.shape[0] >= 5:
-            ellipse = cv2.fitEllipse(c)
-            x = int(ellipse[0][0])
-            y = int(ellipse[0][1])
-            center = (x,y)
-            width = int(ellipse[1][0])
-            height = int(ellipse[1][1])
-            r1 = width/2
-            r2 = height/2
-            cv2.ellipse(clean, ellipse, (0,0,255),2)
-#            roi = clean[y:y+h, x:x+w]
+            x,y,w,h = cv2.boundingRect(c)
+            roi = clean[y:y+h, x:x+w]
+            cv2.imwrite(rootpath + filepath + "_{}.png".format(count), roi)
+            calcHist(roi, filepath, count)
             contours.append(c)    
         count += 1
-#    cv2.imshow("3", clean)
-#    cv2.waitKey(0)
-#    cv2.destroyAllWindows()
-    cv2.imwrite(rootpath + filepath + "_ellipse.jpg", clean)
+
 #    print num, count
 
 if __name__ == "__main__":
     img, gray = img_load(imgname)
     clean = img.copy()
     imgthresh = thresh(img, gray)
-    boundingEllipse(clean, imgthresh, gray)
+    cellSegmentation(clean, imgthresh, gray)
 

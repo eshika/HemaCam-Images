@@ -14,9 +14,9 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 import csv
 
-global rootpath, imgnum
+global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-imgnum = 100
+imgname = "0073"
 
 def write_csv(data, filename):
     with open(rootpath + filename + '.csv', 'w') as f:
@@ -32,7 +32,7 @@ def append_csv(data, filename):
 #        for x in data:
 #            writer.writerow(x)
 
-def watershed_segmentation(img, threshold, gray):
+def calcFeatures(img, threshold, gray, filepath):
     contours = []
     clean = img.copy()
     D = ndimage.distance_transform_edt(threshold)
@@ -40,7 +40,7 @@ def watershed_segmentation(img, threshold, gray):
     	labels=threshold)
     markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
     labels = watershed(-D, markers, mask=threshold)
-    write_csv(['Cell Number', 'Perimeter', 'Area', 'Circularity', 'Major Axis', 'Minor Axis', 'Ratio'], 'data_{}'.format(imgnum))
+    write_csv(['Cell Number', 'Perimeter', 'Area', 'Circularity', 'Major Axis', 'Minor Axis', 'Ratio'], filepath + "_data")
     count = 1
     for label in np.unique(labels):
         if label == 0:
@@ -53,7 +53,7 @@ def watershed_segmentation(img, threshold, gray):
             x,y,w,h = cv2.boundingRect(c)
             features = extractFeatures(c)
             features = [count] + features
-            append_csv(features, 'data_{}'.format(imgnum))
+            append_csv(features, filepath + "_data")
             roi = clean[y:y+h, x:x+w]
             contours.append(c)    
             count += 1
@@ -62,7 +62,7 @@ def watershed_segmentation(img, threshold, gray):
 #    print num, count
 
 if __name__ == "__main__":
-    img, gray = img_load(imgnum)
+    img, gray = img_load(imgname)
     clean = img.copy()
     imgthresh = thresh(img, gray)
-    watershed_segmentation(clean, imgthresh, gray)
+    calcFeatures(clean, imgthresh, gray)

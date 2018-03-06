@@ -14,11 +14,11 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 from matplotlib import pyplot as plt
 
-global rootpath, imgnum
+global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-imgnum = 0
+imgname = "0"
 
-def calcHist(roi):
+def calcHist(roi, filepath, count):
     roi_copy = roi.copy()
     cellgray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     cellthresh = thresh(roi, cellgray)
@@ -28,8 +28,9 @@ def calcHist(roi):
         histr = cv2.calcHist([roi_copy],[i],cellmask,[256],[0,256])
         plt.plot(histr,color = col)
         plt.xlim([0,256])
-    plt.show()
-    
+    fig = plt.gcf()
+    fig.savefig(rootpath + filepath + "_hist_{}.jpg".format(count))
+    plt.clf()
 
 def watershed_segmentation(img, threshold, gray):
     contours = []

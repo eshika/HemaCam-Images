@@ -11,13 +11,13 @@ from scipy import ndimage
 from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
-global rootpath, imgnum
+global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-imgnum = 1000
+imgname = "0073"
 
 
 
-def watershed_segmentation(img, threshold, gray):
+def cellCount(img, threshold, gray, filepath):
     contours = []
     clean = img.copy()
     D = ndimage.distance_transform_edt(threshold)
@@ -33,7 +33,6 @@ def watershed_segmentation(img, threshold, gray):
         mask[labels == label] = 255         
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
         cv2.drawContours(clean, cnts, -1, (255,0,0), 3)
-        cv2.imshow("2", clean)
         c = max(cnts, key=cv2.contourArea)
         if c.shape[0] >= 5:
             x,y,w,h = cv2.boundingRect(c)
@@ -45,14 +44,15 @@ def watershed_segmentation(img, threshold, gray):
             roi = clean[y:y+h, x:x+w]
             contours.append(c)    
         count += 1
-
+#    cv2.imshow("2", clean)
+    cv2.imwrite(rootpath + filepath + "_count.jpg", clean)
 #    print num, count
 
 if __name__ == "__main__":
-    img, gray = img_load(imgnum)
+    img, gray = img_load(imgname)
     clean = img.copy()
     imgthresh = thresh(img, gray)
-    cv2.imshow("1", imgthresh)
-    watershed_segmentation(clean, imgthresh, gray)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+#    cv2.imshow("1", imgthresh)
+    cellCount(clean, imgthresh, gray)
+#    cv2.waitKey(0)
+#    cv2.destroyAllWindows()

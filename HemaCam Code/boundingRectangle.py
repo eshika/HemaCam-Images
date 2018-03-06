@@ -13,13 +13,13 @@ from scipy import ndimage
 from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
-global rootpath, imgnum
+global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-imgnum = 58
+imgname = "0057"
 
 
 
-def watershed_segmentation(img, threshold, gray):
+def boundingRectangle(img, threshold, gray, filepath):
     contours = []
     clean = img.copy()
     D = ndimage.distance_transform_edt(threshold)
@@ -41,14 +41,15 @@ def watershed_segmentation(img, threshold, gray):
             roi = clean[y:y+h, x:x+w]
             contours.append(c)    
         count += 1
-    cv2.imshow("3", clean)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    cv2.imwrite(rootpath + filepath + "_rectangle.jpg", clean)
+#    cv2.imshow("3", clean)
+#    cv2.waitKey(0)
+#    cv2.destroyAllWindows()
 #    print num, count
 
 if __name__ == "__main__":
-    img, gray = img_load(imgnum)
+    img, gray = img_load(imgname)
     clean = img.copy()
     imgthresh = thresh(img, gray)
-    watershed_segmentation(clean, imgthresh, gray)
+    boundingRectangle(clean, imgthresh, gray)
 
