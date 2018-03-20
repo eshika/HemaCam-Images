@@ -49,6 +49,7 @@ def cellArea(img, threshold, gray, filepath):
 #    cv2.imshow("3", clean)
     cv2.drawContours(clean, contours, -1, (255,0,0), 3)
     cv2.imwrite(rootpath + filepath + "_area.jpg", clean)
+    return clean
 #    cv2.imshow("2", clean)
 #    cv2.waitKey(0)
 #    cv2.destroyAllWindows()

@@ -16,7 +16,6 @@ import csv
 
 global rootpath, imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-imgname = "0073"
 
 def write_csv(data, filename):
     with open(rootpath + filename + '.csv', 'w') as f:
@@ -32,7 +31,8 @@ def append_csv(data, filename):
 #        for x in data:
 #            writer.writerow(x)
 
-def calcFeatures(img, threshold, gray, filepath):
+
+def calcFeatures(img, threshold, gray, filepath, imgname):
     contours = []
     clean = img.copy()
     D = ndimage.distance_transform_edt(threshold)
@@ -40,7 +40,7 @@ def calcFeatures(img, threshold, gray, filepath):
     	labels=threshold)
     markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
     labels = watershed(-D, markers, mask=threshold)
-    write_csv(['Cell Number', 'Perimeter', 'Area', 'Circularity', 'Major Axis', 'Minor Axis', 'Ratio'], filepath + "_data")
+    write_csv(['File Name', 'Cell Image', 'Perimeter', 'Area', 'Circularity'], filepath + "_data")
     count = 1
     for label in np.unique(labels):
         if label == 0:
@@ -51,8 +51,15 @@ def calcFeatures(img, threshold, gray, filepath):
         c = max(cnts, key=cv2.contourArea)
         if c.shape[0] >= 5:
             x,y,w,h = cv2.boundingRect(c)
-            features = extractFeatures(c)
-            features = [count] + features
+            features = extractFeatures(c)           
+# Original            
+#            features = [imgname + "_{}".format(count) + ".png"] + [count] + features
+ # MODIFIED           
+#            features = [imgname + "_{}".format(count) + ".png"] + [ '<img src=' + '"..\\Cell_Images\\' + imgname + "_{}".format(count) + ".png" + '">'] + [count] + features
+            features = [imgname + "_{}".format(count) + ".png"] + [ '<img src="' + imgname + "_{}".format(count) + ".png" + '">'] + features
+
+# End Modified
+            
             append_csv(features, filepath + "_data")
             roi = clean[y:y+h, x:x+w]
             contours.append(c)    
@@ -62,7 +69,7 @@ def calcFeatures(img, threshold, gray, filepath):
 #    print num, count
 
 if __name__ == "__main__":
-    img, gray = img_load(imgname)
+    img, gray = img_load("0073")
     clean = img.copy()
     imgthresh = thresh(img, gray)
     calcFeatures(clean, imgthresh, gray)

@@ -16,9 +16,9 @@ Created on Thu Aug 17 11:39:22 2017
 """
 
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-import matplotlib.pyplot as plt
+#from sklearn.model_selection import train_test_split
+#from sklearn.neighbors import KNeighborsClassifier
+#import matplotlib.pyplot as plt
 import cv2
 from scipy import ndimage
 from skimage.feature import peak_local_max
@@ -28,7 +28,7 @@ import math
 
 global rootpath, imgnum
 #rootpath = "C:\Users\eshikasaxena\OneDrive\Documents\Github\Sickle Cell"
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\demo\\"
 imgnum = 2
 
 def img_load(name):
@@ -73,8 +73,8 @@ def thresh(img, gray):
     return threshold
 
 def extractFeatures(c):
-    area = cv2.contourArea(c)
-    perimeter = cv2.arcLength(c, True)
+    area = round(cv2.contourArea(c), 2)
+    perimeter = round(cv2.arcLength(c, True), 2)
     compactness = (perimeter**2/area) - 1.0
     circularity = (4*math.sqrt(area))/perimeter
     ellipse = cv2.fitEllipse(c)
@@ -86,11 +86,12 @@ def extractFeatures(c):
     height = int(ellipse[1][1])
     r1 = width/2.0
     r2 = height/2.0
-    ratio = r1/r2
+    ratio = round(r1/r2, 2)
 #    cv2.imshow("mask", new)    
 #    mean, stddev = cv2.meanStdDev(gray, new)
 #    print stddev
-    features = [perimeter, area, circularity, r1, r2, ratio]
+#    features = [perimeter, area, circularity, r1, r2, ratio]
+    features = [perimeter, area, ratio]
     return features
 
 def manual_label(c, clean, target):
@@ -201,18 +202,18 @@ def read_data(filename):
     datalist, target = read_csv(filename)
     return datalist, target
 
-def machine_learning(datalist, target):
-    train, test, train_labels, test_labels = train_test_split(datalist,
-                                                              target,
-                                                              test_size=0.50,
-                                                              random_state=42)
-    clf = KNeighborsClassifier(n_neighbors=3)
-    clf.fit(train, train_labels)
-    
-    print (test_labels)
-    print (clf.predict(test))
-    print (clf.score(train, train_labels))
-    print (clf.score(test, test_labels))           
+#def machine_learning(datalist, target):
+#    train, test, train_labels, test_labels = train_test_split(datalist,
+#                                                              target,
+#                                                              test_size=0.50,
+#                                                              random_state=42)
+#    clf = KNeighborsClassifier(n_neighbors=3)
+#    clf.fit(train, train_labels)
+#    
+#    print (test_labels)
+#    print (clf.predict(test))
+#    print (clf.score(train, train_labels))
+#    print (clf.score(test, test_labels))           
 
 if __name__ == "__main__":
     num = 1

@@ -24,18 +24,20 @@ from cellCount import cellCount
 from features import calcFeatures
 from boundingRectangle import boundingRectangle
 
-imgname = 'Best3'
-filepath = "poster\\" + imgname + "\\" + imgname
+imgname = 'Best2'
+filepath = "demo\\" + imgname + "\\" + imgname
 rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
-print (filepath)
 img, gray = img_load(imgname)
 cv2.imwrite(rootpath + filepath + ".jpg", img)
 cv2.imwrite(rootpath + filepath + "_gray.jpg", gray)
 threshold = thresh(img, gray)
 cv2.imwrite(rootpath + filepath + "_thresh.jpg", threshold)
-cellArea(img, threshold, gray, filepath)
+area = cellArea(img, threshold, gray, filepath)
 boundingEllipse(img, threshold, gray, filepath)
 cellCount(img, threshold, gray, filepath)
 boundingRectangle(img, threshold, gray, filepath)
 cellSegmentation(img, threshold, gray, filepath)
 calcFeatures(img, threshold, gray, filepath)
+cv2.imshow("out", np.hstack((img, area)))
+cv2.waitKey(0)
+cv2.destroyAllWindows()

@@ -48,11 +48,17 @@ def cellSegmentation(img, threshold, gray, filepath):
         c = max(cnts, key=cv2.contourArea)
         if c.shape[0] >= 5:
             x,y,w,h = cv2.boundingRect(c)
-            roi = clean[y:y+h, x:x+w]
-            cv2.imwrite(rootpath + filepath + "_{}.png".format(count), roi)
-            calcHist(roi, filepath, count)
-            contours.append(c)    
-        count += 1
+
+# Filter out small/incomplete cells            
+            area = cv2.contourArea(c)
+            perimeter = cv2.arcLength(c, True)
+            if area > 100 and perimeter > 70:
+                
+                roi = clean[y:y+h, x:x+w]
+                cv2.imwrite(filepath + "_{}.png".format(count), roi)
+    #            calcHist(roi, filepath, count)
+                contours.append(c)    
+                count += 1
 
 #    print num, count
 
