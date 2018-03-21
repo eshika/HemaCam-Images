@@ -52,7 +52,7 @@ def cellSegmentation(img, threshold, gray, filepath):
 # Filter out small/incomplete cells            
             area = cv2.contourArea(c)
             perimeter = cv2.arcLength(c, True)
-            if area > 100 and perimeter > 70:
+            if area > 100 and perimeter > 150 and area < 6000 and perimeter < 300:
                 
                 roi = clean[y:y+h, x:x+w]
                 cv2.imwrite(filepath + "_{}.png".format(count), roi)

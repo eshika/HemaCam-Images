@@ -51,19 +51,22 @@ def calcFeatures(img, threshold, gray, filepath, imgname):
         c = max(cnts, key=cv2.contourArea)
         if c.shape[0] >= 5:
             x,y,w,h = cv2.boundingRect(c)
-            features = extractFeatures(c)           
+            area = cv2.contourArea(c)
+            perimeter = cv2.arcLength(c, True)
+            if area > 100 and perimeter > 150 and area < 6000 and perimeter < 300:
+                features = extractFeatures(c)           
 # Original            
 #            features = [imgname + "_{}".format(count) + ".png"] + [count] + features
  # MODIFIED           
 #            features = [imgname + "_{}".format(count) + ".png"] + [ '<img src=' + '"..\\Cell_Images\\' + imgname + "_{}".format(count) + ".png" + '">'] + [count] + features
-            features = [imgname + "_{}".format(count) + ".png"] + [ '<img src="' + imgname + "_{}".format(count) + ".png" + '">'] + features
+                features = [imgname + "_{}".format(count) + ".png"] + [ '<img src="' + imgname + "_{}".format(count) + ".png" + '">'] + features
 
 # End Modified
             
-            append_csv(features, filepath + "_data")
-            roi = clean[y:y+h, x:x+w]
-            contours.append(c)    
-            count += 1
+                append_csv(features, filepath + "_data")
+                roi = clean[y:y+h, x:x+w]
+                contours.append(c)    
+                count += 1
             
         
 #    print num, count
