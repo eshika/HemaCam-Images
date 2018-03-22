@@ -119,7 +119,7 @@ if __name__ == "__main__":
                                 lines.append(row+[label, maxConfidence])
                                              
                             elif len(row) != 0:
-                                header = row+['Result', 'Confidence']
+                                header = row+['Label', 'Confidence']
                     
                     imgname, extension = os.path.basename(csv_file).split(".")
                     print (path_save + imgname + '_results.csv')
