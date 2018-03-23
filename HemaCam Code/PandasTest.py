@@ -6,16 +6,71 @@ Created on Sat Mar 17 23:11:04 2018
 """
 
 import pandas as pd
+import csv
 
 inpath = '..\\HemaCam-Data\\Segmented_Cells\\Cell_Properties'
-outpath = '..\\HemaCam-Data\\Segmented_Cells\\Cell_Images'
-csvInpfile = inpath + '\\results.csv'
-htmlOutfile = outpath + '\\index.html'
+outpath = '..\\HemaCam-Data\\Segmented_Cells\\Cell_Properties'
+csvInpfile = inpath + '\\Sickle3_data_results.csv'
+htmlOutfile = outpath + '\\pandas.html'
 
 df = pd.read_csv(csvInpfile)
 file = open(htmlOutfile, 'w')
 file.write(df.to_html(justify='center', escape = False))
 file.close()
+
+
+
+
+summaryOutfile = outpath + '\\summary.html'
+summaryOutCsv = outpath + '\\summary.csv'
+
+#summaryDF = df.groupby('Result').count()
+
+
+#CODE STARTS HERE        
+
+count = df['Result'].count()
+data = df['Result'].value_counts(dropna=True)
+regular = data.get('Regular')
+sickle = data.get('Sickle')
+total_data = [['Regular Cells', str(regular)], ['Sickle Cells', str(sickle)], ['Total Cells', str(count)]]
+
+with open(summaryOutCsv, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Summary', 'Count'])
+        for x in total_data:
+            writer.writerow(x)
+#        writer.writerow(['Count', 'Regular', 'Sickle'])
+#        writer.writerow([count, regular, sickle])
+
+
+df = pd.read_csv(summaryOutCsv)
+file = open(summaryOutfile, 'w')
+file.write(df.to_html(justify='center', escape = False))
+file.close()
+f.close()
+
+
+#print('END            ')
+
+
+
+#summaryHeader = ['Total']
+#row1 = ['Total cells',  df['Result'].count()]
+#row2 = [df['Result'].value_counts(dropna=False) ]
+##row2 = [df['Result'].count() ]
+#sf = pd.DataFrame([row2], columns=summaryHeader)
+#print(sf)
+#print (sf)
+#print (row2)
+
+#print (df)
+
+#summaryFile = open(summaryOutfile, 'w')
+##                    summaryFile.write(summaryDF.to_html(justify='center', escape = False))
+
+#summaryFile.write(summaryDF.ix[:, 2].to_html(justify='center', escape = False))
+#summaryFile.close()
 
 
  

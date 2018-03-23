@@ -16,6 +16,7 @@ from train import data_root
 from newPipeline import pipeline
 import csv
 import pandas as pd
+from SummaryHTML import  summaryHTML
 
 pipeline()
 
@@ -113,48 +114,67 @@ if __name__ == "__main__":
                                     continue
                                 images = np.expand_dims(images, axis=0)
                                 confidence_values = sess.run(tf.nn.softmax(logits), feed_dict={x: images, keep_dropout: 1., train_phase: False}).flatten()
-
                                 maxConfidence = round(max(confidence_values), 2)
                                 label = label_map[np.argmax(confidence_values)]
                                 lines.append(row+[label, maxConfidence])
                                              
                             elif len(row) != 0:
-                                header = row+['Label', 'Confidence']
+                                header = row+['Result', 'Confidence']
                     
+                    file.close()
                     imgname, extension = os.path.basename(csv_file).split(".")
-                    print (path_save + imgname + '_results.csv')
-                    output_file = open(path_save + imgname + '_results.csv', 'w')
+                    
+                    output_file = open(path_save + 'Results/' + imgname + '_results.csv', 'w')
+                    print (output_file)
+                    
                     writer = csv.writer(output_file)
                     writer.writerow(header)
                     writer.writerows(lines)
+                    lines.clear()
                     output_file.close()
                     
-                    lines.clear()
                     
-                    outpath = '..\\HemaCam-Data\\Segmented_Cells\\Cell_Images\\'
-                    csvInpfile = path_save + imgname + '_results.csv'
-                    htmlOutfile = outpath + imgname + '_results.html'
+                    
+#                    outpath = '..\\HemaCam-Data\\Segmented_Cells\\Cell_Images\\'
+#                    csvInpfile = path_save + imgname + '_results.csv'
+#                    htmlOutfile = outpath + imgname + '_results.html'
+#
+#                    df = pd.read_csv(csvInpfile)
+#                    html_file = open(htmlOutfile, 'w')
+#                    html_file.write(df.to_html(justify='center', escape = False))
+#                    html_file.close()
+#
+## Write Summary file
+#                    count = df['Result'].count()
+#                    data = df['Result'].value_counts(dropna=True)
+#                    regular = data.get('Regular')
+#                    sickle = data.get('Sickle')
+#                    total_data = [['Regular Cells', str(regular)], ['Sickle Cells', str(sickle)], ['Total Cells', str(count)]]
 
-                    df = pd.read_csv(csvInpfile)
-                    file = open(htmlOutfile, 'w')
-                    file.write(df.to_html(justify='center', escape = False))
-                    file.close()
+#                    summaryOutfile = outpath + imgname + '_results_summary.html'
+#                    summaryOutCsv = path_save + '..\\Cell_Summary\\' + imgname + '_results_summary.csv'
+                    
+#                    with open(summaryOutCsv, 'w') as rf:
+#                            writer = csv.writer(rf)
+#                            writer.writerow(['Summary', 'Count'])
+#                            for x in total_data:
+#                                writer.writerow(x)
+#                                
+#                    df2 = pd.read_csv(summaryOutCsv)
+#                    rf.close()
+#                    summaryFile = open(summaryOutfile, 'w')
+#                    summaryFile.write(df2.to_html(justify='center', escape = False))
+#                    summaryFile.close()
 
-                    
-                    
-                    
-#            output_file = open(path_save+'results.csv', 'w')
-#            writer = csv.writer(output_file)
-#            writer.writerow(header)
-#            writer.writerows(lines)
-#            output_file.close()
+
 
             print('Evaluation Finished!')
             
         else:
             print('No model found')
     
-    
-    
-    
+
+print ('Printing results in HTML')
+summaryHTML()
+
     
