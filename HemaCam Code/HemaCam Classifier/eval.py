@@ -89,9 +89,13 @@ if __name__ == "__main__":
                     path = os.path.join(testdir, im)
                     images = loader_test.load_image(path)
                     images = np.expand_dims(images, axis=0)
+#                    label = sess.run(tf.nn.softmax(logits), feed_dict={x: images, keep_dropout: 1., train_phase: False})
+#                    file.write(path+' '+' '.join([str(label_map[num]) for num in label.indices[0]])+'\n')
+#                    file.write(path + " " +  " ".join([str(x) for x in label]) + "\n")
                     label = sess.run(tf.nn.top_k(logits, k=len(label_map), sorted=True, name=None), feed_dict={x: images, keep_dropout: 1., train_phase: False})
                     file.write(path+' '+' '.join([str(label_map[num]) for num in label.indices[0]])+'\n')
             file.close()
+#            print(label_map)
             print('Evaluation Finished!')
             
         else:

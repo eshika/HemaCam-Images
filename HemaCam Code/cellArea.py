@@ -41,11 +41,13 @@ def cellArea(img, threshold, gray, filepath):
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])   
             area = M["m00"]
+            perimeter = cv2.arcLength(c, True)
+            if area > 1500 and perimeter > 150 and area < 6000 and perimeter < 300:
 #            cv2.circle(clean, (cX, cY), 7, (255, 255, 255), -1)
-            cv2.putText(clean, "{}".format(area), (cX-10, cY+5), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0,0,0), 1, cv2.LINE_AA)
-            roi = clean[y:y+h, x:x+w]
-            contours.append(c)    
-        count += 1
+                cv2.putText(clean, "{}".format(area), (cX-10, cY+5), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0,0,0), 1, cv2.LINE_AA)
+                roi = clean[y:y+h, x:x+w]
+                contours.append(c)    
+                count += 1
 #    cv2.imshow("3", clean)
     cv2.drawContours(clean, contours, -1, (255,0,0), 3)
     cv2.imwrite(rootpath + filepath + "_area.jpg", clean)
