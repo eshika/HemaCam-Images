@@ -25,7 +25,7 @@ from skimage.morphology import watershed
 from color import calcHist
 
 global rootpath, imgname
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\HemaCam-Data\\"
 imgname = "0057"
 
 
@@ -55,7 +55,7 @@ def cellSegmentation(img, threshold, gray, filepath):
             if area > 100 and perimeter > 150 and area < 6000 and perimeter < 300:
                 
                 roi = clean[y:y+h, x:x+w]
-                cv2.imwrite(filepath + "_{}.png".format(count), roi)
+                cv2.imwrite(rootpath + filepath + "_{}.png".format(count), roi)
     #            calcHist(roi, filepath, count)
                 contours.append(c)    
                 count += 1

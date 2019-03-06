@@ -216,7 +216,7 @@ def read_data(filename):
 #    print (clf.score(test, test_labels))           
 
 if __name__ == "__main__":
-    num = 1
+    num = "Best1"
     img, gray = img_load(num)
     clean = img.copy()
     threshold = thresh(img, gray)

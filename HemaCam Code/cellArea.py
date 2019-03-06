@@ -14,7 +14,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
 global rootpath, imgname
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\HemaCam-Data\\"
 imgname = "0057"
 
 

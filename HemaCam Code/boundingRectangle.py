@@ -14,7 +14,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
 global rootpath, imgname
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\HemaCam-Data\\"
 imgname = "0057"
 
 
@@ -42,6 +42,7 @@ def boundingRectangle(img, threshold, gray, filepath):
             contours.append(c)    
         count += 1
     cv2.imwrite(rootpath + filepath + "_rectangle.jpg", clean)
+    return clean
 #    cv2.imshow("3", clean)
 #    cv2.waitKey(0)
 #    cv2.destroyAllWindows()
@@ -51,5 +52,8 @@ if __name__ == "__main__":
     img, gray = img_load(imgname)
     clean = img.copy()
     imgthresh = thresh(img, gray)
-    boundingRectangle(clean, imgthresh, gray)
+    rect = boundingRectangle(clean, imgthresh, gray, "")
+    cv2.imshow("", rect)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 

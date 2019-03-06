@@ -12,7 +12,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
 global rootpath, imgname
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\HemaCam-Data\\"
 imgname = "0073"
 
 
@@ -46,6 +46,7 @@ def cellCount(img, threshold, gray, filepath):
         count += 1
 #    cv2.imshow("2", clean)
     cv2.imwrite(rootpath + filepath + "_count.jpg", clean)
+    return clean
 #    print num, count
 
 if __name__ == "__main__":

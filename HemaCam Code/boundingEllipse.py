@@ -14,7 +14,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
 global rootpath, imgname
-rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\Code\\"
+rootpath = "C:\\Users\\eshikasaxena\\Desktop\\HemaCam Project\\HemaCam-Data\\"
 imgname = "0057"
 
 
@@ -52,6 +52,8 @@ def boundingEllipse(img, threshold, gray, filepath):
 #    cv2.waitKey(0)
 #    cv2.destroyAllWindows()
     cv2.imwrite(rootpath + filepath + "_ellipse.jpg", clean)
+    return clean
+    
 #    print num, count
 
 if __name__ == "__main__":
